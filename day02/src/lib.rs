@@ -109,7 +109,7 @@ impl Game {
     }
 }
 
-pub fn possible_games<T: Read>(input: T) -> Result<u32, Box<dyn Error>> {
+pub fn possible_games(input: impl Read) -> Result<u32, Box<dyn Error>> {
     let mut sum = 0;
 
     for line in io::BufReader::new(input).lines() {
@@ -123,7 +123,7 @@ pub fn possible_games<T: Read>(input: T) -> Result<u32, Box<dyn Error>> {
     Ok(sum)
 }
 
-pub fn power_sets<T: Read>(input: T) -> Result<u32, Box<dyn Error>> {
+pub fn power_sets(input: impl Read) -> Result<u32, Box<dyn Error>> {
     let mut sum = 0;
 
     for line in io::BufReader::new(input).lines() {

@@ -3,7 +3,7 @@ use std::io::{self, BufRead, Read};
 
 const DIGIT_STRINGS: [&str; 10] = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
-pub fn calibrate<T: Read>(input: T, include_strings: bool) -> Result<u32, Box<dyn Error>> {
+pub fn calibrate(input: impl Read, include_strings: bool) -> Result<u32, Box<dyn Error>> {
     let mut sum = 0;
 
     for line in io::BufReader::new(input).lines() {
