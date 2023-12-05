@@ -39,7 +39,12 @@ impl FromStr for GameSet {
 
         for color_count in s.split(", ") {
             let mut parts = color_count.split(" ");
-            let count: u32 = parts.next().ok_or(ParseGameError)?.parse().map_err(|_| ParseGameError)?;
+
+            let count: u32 = parts
+                .next()
+                .ok_or(ParseGameError)?
+                .parse()
+                .map_err(|_| ParseGameError)?;
             let color = parts.next().ok_or(ParseGameError)?;
 
             match color {
@@ -50,7 +55,11 @@ impl FromStr for GameSet {
             }
         }
 
-        Ok(GameSet { red_count, green_count, blue_count })
+        Ok(GameSet {
+            red_count,
+            green_count,
+            blue_count,
+        })
     }
 }
 
@@ -62,7 +71,12 @@ impl FromStr for Game {
 
         let mut id_parts = parts.next().ok_or(ParseGameError)?.split(" ");
         id_parts.next().ok_or(ParseGameError)?;
-        let id = id_parts.next().ok_or(ParseGameError)?.parse().map_err(|_| ParseGameError)?;
+
+        let id = id_parts
+            .next()
+            .ok_or(ParseGameError)?
+            .parse()
+            .map_err(|_| ParseGameError)?;
 
         let set_parts = parts.next().ok_or(ParseGameError)?;
         let mut sets = vec![];
