@@ -1,7 +1,9 @@
 use std::error::Error;
 use std::io::{self, BufRead, Read};
 
-const DIGIT_STRINGS: [&str; 10] = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+const DIGIT_STRINGS: [&str; 10] = [
+    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+];
 
 pub fn calibrate(input: impl Read, include_strings: bool) -> Result<u32, Box<dyn Error>> {
     let mut sum = 0;
