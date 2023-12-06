@@ -192,9 +192,7 @@ pub fn sum_gear_ratios(input: impl Read) -> Result<u32, Box<dyn Error>> {
 mod tests {
     use super::*;
 
-    #[test]
-    fn total_part_numbers() -> Result<(), Box<dyn Error>> {
-        let input = "467..114..
+    const INPUT: &str = "467..114..
 ...*......
 ..35..633.
 ......#...
@@ -205,25 +203,16 @@ mod tests {
 ...$.*....
 .664.598..";
 
-        assert_eq!(4361, sum_part_numbers(input.as_bytes())?);
+    #[test]
+    fn total_part_numbers() -> Result<(), Box<dyn Error>> {
+        assert_eq!(4361, sum_part_numbers(INPUT.as_bytes())?);
 
         Ok(())
     }
 
     #[test]
     fn total_gear_ratios() -> Result<(), Box<dyn Error>> {
-        let input = "467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598..";
-
-        assert_eq!(467835, sum_gear_ratios(input.as_bytes())?);
+        assert_eq!(467835, sum_gear_ratios(INPUT.as_bytes())?);
 
         Ok(())
     }
