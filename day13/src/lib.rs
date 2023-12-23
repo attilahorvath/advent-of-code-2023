@@ -41,34 +41,31 @@ impl Pattern {
         self.tiles.len() / self.width
     }
 
-    fn get_row(&self, y: usize) -> &[Tile] {
-        &self.tiles[(y * self.width)..((y + 1) * self.width)]
+    fn tiles_in_col<'a>(&'a self, x: usize) -> impl Iterator<Item = &Tile> + 'a {
+        self.tiles.iter().skip(x).step_by(self.width)
     }
 
-    fn get_col(&self, x: usize) -> Vec<Tile> {
-        (0..self.height())
-            .map(|y| self.tiles[y * self.width + x])
-            .collect::<Vec<_>>()
+    fn tiles_in_row<'a>(&'a self, y: usize) -> impl Iterator<Item = &Tile> + 'a {
+        self.tiles.iter().skip(y * self.width).take(self.width)
     }
 
-    fn reflected_cols(&self, max_differences: usize) -> usize {
+    fn reflected_cols(&self, differences: usize) -> usize {
         'outer: for x in 0..(self.width - 1) {
-            let mut differences = 0;
+            let mut diff = 0;
 
             for i in 0..(x + 1).min(self.width - x - 1) {
-                differences += self
-                    .get_col(x - i)
-                    .iter()
-                    .zip(self.get_col(x + 1 + i).iter())
+                diff += self
+                    .tiles_in_col(x - i)
+                    .zip(self.tiles_in_col(x + 1 + i))
                     .filter(|(a, b)| a != b)
                     .count();
 
-                if differences > max_differences {
+                if diff > differences {
                     continue 'outer;
                 }
             }
 
-            if differences == max_differences {
+            if diff == differences {
                 return x + 1;
             }
         }
@@ -76,24 +73,23 @@ impl Pattern {
         0
     }
 
-    fn reflected_rows(&self, max_differences: usize) -> usize {
+    fn reflected_rows(&self, differences: usize) -> usize {
         'outer: for y in 0..(self.height() - 1) {
-            let mut differences = 0;
+            let mut diff = 0;
 
             for i in 0..(y + 1).min(self.height() - y - 1) {
-                differences += self
-                    .get_row(y - i)
-                    .iter()
-                    .zip(self.get_row(y + 1 + i).iter())
+                diff += self
+                    .tiles_in_row(y - i)
+                    .zip(self.tiles_in_row(y + 1 + i))
                     .filter(|(a, b)| a != b)
                     .count();
 
-                if differences > max_differences {
+                if diff > differences {
                     continue 'outer;
                 }
             }
 
-            if differences == max_differences {
+            if diff == differences {
                 return y + 1;
             }
         }
@@ -101,12 +97,12 @@ impl Pattern {
         0
     }
 
-    fn summarize(&self, max_differences: usize) -> usize {
-        self.reflected_cols(max_differences) + 100 * self.reflected_rows(max_differences)
+    fn summarize(&self, differences: usize) -> usize {
+        self.reflected_cols(differences) + 100 * self.reflected_rows(differences)
     }
 }
 
-pub fn sum_patterns(input: impl Read, max_differences: usize) -> Result<usize, Box<dyn Error>> {
+pub fn sum_patterns(input: impl Read, differences: usize) -> Result<usize, Box<dyn Error>> {
     let mut sum = 0;
     let mut pattern = Pattern::new();
 
@@ -114,7 +110,7 @@ pub fn sum_patterns(input: impl Read, max_differences: usize) -> Result<usize, B
         let l = line?;
 
         if l.is_empty() {
-            sum += pattern.summarize(max_differences);
+            sum += pattern.summarize(differences);
             pattern = Pattern::new();
         } else {
             let mut row = l.chars().map(|c| c.into()).collect::<Vec<_>>();
@@ -122,7 +118,7 @@ pub fn sum_patterns(input: impl Read, max_differences: usize) -> Result<usize, B
         }
     }
 
-    sum += pattern.summarize(max_differences);
+    sum += pattern.summarize(differences);
 
     Ok(sum)
 }
