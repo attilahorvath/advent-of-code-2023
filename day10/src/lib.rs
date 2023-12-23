@@ -1,5 +1,4 @@
 use std::error::Error;
-// use std::fmt;
 use std::io::{self, BufRead, Read};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
