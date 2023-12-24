@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::HashMap;
 use std::error::Error;
 use std::io::{self, BufRead, Read};
 
@@ -11,7 +11,7 @@ enum Tile {
     HorizontalSplitter,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 enum Direction {
     Up,
     Down,
@@ -19,7 +19,7 @@ enum Direction {
     Right,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 struct Beam {
     x: usize,
     y: usize,
@@ -138,24 +138,20 @@ impl Layout {
         self.tiles.len() / self.width
     }
 
-    fn trace_beam(
-        &self,
-        beam: Beam,
-        history: &mut HashSet<Beam>,
-        energized: &mut HashSet<(usize, usize)>,
-    ) {
+    fn trace_beam(&self, beam: Beam, history: &mut HashMap<(usize, usize), [bool; 4]>) {
         let mut beam = beam;
 
         loop {
-            if history.contains(&beam) {
+            let entry = history.entry((beam.x, beam.y)).or_default();
+
+            if entry[beam.direction as usize] {
                 return;
             }
 
-            history.insert(beam);
-            energized.insert((beam.x, beam.y));
+            entry[beam.direction as usize] = true;
 
             if let Some(b) = beam.reflect_and_split(self.tiles[beam.y * self.width + beam.x]) {
-                self.trace_beam(b, history, energized);
+                self.trace_beam(b, history);
             }
 
             if !beam.advance(self) {
@@ -165,12 +161,11 @@ impl Layout {
     }
 
     fn find_energized(&self, beam: Beam) -> usize {
-        let mut history = HashSet::new();
-        let mut energized = HashSet::new();
+        let mut history = HashMap::new();
 
-        self.trace_beam(beam, &mut history, &mut energized);
+        self.trace_beam(beam, &mut history);
 
-        energized.len()
+        history.len()
     }
 
     fn find_max_energized(&self) -> usize {
