@@ -212,7 +212,7 @@ mod tests {
 
     #[test]
     fn total_gear_ratios() -> Result<(), Box<dyn Error>> {
-        assert_eq!(467835, sum_gear_ratios(INPUT.as_bytes())?);
+        assert_eq!(467_835, sum_gear_ratios(INPUT.as_bytes())?);
 
         Ok(())
     }
