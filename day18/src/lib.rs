@@ -246,7 +246,7 @@ U 2 (#7a21e3)";
 
     #[test]
     fn count_total_lava_held_swapped() -> Result<(), Box<dyn Error>> {
-        assert_eq!(952408144115, total_lava_held(PLAN.as_bytes(), true)?);
+        assert_eq!(952_408_144_115, total_lava_held(PLAN.as_bytes(), true)?);
 
         Ok(())
     }

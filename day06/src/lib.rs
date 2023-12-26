@@ -87,7 +87,7 @@ Distance:  9  40  200";
 
     #[test]
     fn total_ways_with_join() -> Result<(), Box<dyn Error>> {
-        assert_eq!(71503, total_ways(INPUT.as_bytes(), true)?);
+        assert_eq!(71_503, total_ways(INPUT.as_bytes(), true)?);
 
         Ok(())
     }
