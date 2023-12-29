@@ -102,12 +102,12 @@ impl Map {
         }
     }
 
-    fn add_row(&mut self, row: &mut Vec<Tile>) {
+    fn add_row(&mut self, mut row: Vec<Tile>) {
         if self.width == 0 {
             self.width = row.len();
         }
 
-        self.tiles.append(row);
+        self.tiles.append(&mut row);
     }
 
     fn get_tile(&self, (x, y): (i32, i32)) -> Option<Tile> {
@@ -260,10 +260,7 @@ pub fn build_map(input: impl Read) -> Result<Map, Box<dyn Error>> {
     let mut map = Map::new();
 
     for line in io::BufReader::new(input).lines() {
-        let l = line?;
-        let mut row = l.chars().map(|c| c.into()).collect::<Vec<_>>();
-
-        map.add_row(&mut row);
+        map.add_row(line?.chars().map(|c| c.into()).collect());
     }
 
     map.find_vertices();

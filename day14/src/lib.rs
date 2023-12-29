@@ -39,12 +39,12 @@ impl Platform {
         }
     }
 
-    fn add_row(&mut self, row: &mut Vec<Space>) {
+    fn add_row(&mut self, mut row: Vec<Space>) {
         if self.width == 0 {
             self.width = row.len();
         }
 
-        self.spaces.append(row);
+        self.spaces.append(&mut row);
     }
 
     fn height(&self) -> usize {
@@ -183,10 +183,7 @@ pub fn build_platform(input: impl Read) -> Result<Platform, Box<dyn Error>> {
     let mut platform = Platform::new();
 
     for line in io::BufReader::new(input).lines() {
-        let l = line?;
-
-        let mut row = l.chars().map(|c| c.into()).collect::<Vec<_>>();
-        platform.add_row(&mut row);
+        platform.add_row(line?.chars().map(|c| c.into()).collect());
     }
 
     Ok(platform)

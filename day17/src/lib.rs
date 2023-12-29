@@ -108,12 +108,12 @@ impl Map {
         self.blocks.len() / self.width
     }
 
-    fn add_row(&mut self, row: &mut Vec<u32>) {
+    fn add_row(&mut self, mut row: Vec<u32>) {
         if self.width == 0 {
             self.width = row.len();
         }
 
-        self.blocks.append(row);
+        self.blocks.append(&mut row);
     }
 
     fn find_min_loss(&self, min_blocks: usize, max_blocks: usize) -> u32 {
@@ -159,14 +159,12 @@ pub fn min_heat_loss(
     let mut map = Map::new();
 
     for line in io::BufReader::new(input).lines() {
-        let l = line?;
-
-        let mut row = l
-            .chars()
-            .map(|c| c.to_digit(10).unwrap_or_default())
-            .collect();
-
-        map.add_row(&mut row);
+        map.add_row(
+            line?
+                .chars()
+                .map(|c| c.to_digit(10).unwrap_or_default())
+                .collect(),
+        );
     }
 
     Ok(map.find_min_loss(min_blocks, max_blocks))
