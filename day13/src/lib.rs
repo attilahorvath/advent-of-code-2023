@@ -29,12 +29,12 @@ impl Pattern {
         }
     }
 
-    fn add_row(&mut self, row: &mut Vec<Tile>) {
+    fn add_row(&mut self, mut row: Vec<Tile>) {
         if self.width == 0 {
             self.width = row.len();
         }
 
-        self.tiles.append(row);
+        self.tiles.append(&mut row);
     }
 
     fn height(&self) -> usize {
@@ -113,8 +113,7 @@ pub fn sum_patterns(input: impl Read, differences: usize) -> Result<usize, Box<d
             sum += pattern.summarize(differences);
             pattern = Pattern::new();
         } else {
-            let mut row = l.chars().map(|c| c.into()).collect::<Vec<_>>();
-            pattern.add_row(&mut row);
+            pattern.add_row(l.chars().map(|c| c.into()).collect());
         }
     }
 

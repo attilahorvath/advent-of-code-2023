@@ -126,12 +126,12 @@ impl Layout {
         }
     }
 
-    fn add_row(&mut self, row: &mut Vec<Tile>) {
+    fn add_row(&mut self, mut row: Vec<Tile>) {
         if self.width == 0 {
             self.width = row.len();
         }
 
-        self.tiles.append(row);
+        self.tiles.append(&mut row);
     }
 
     fn height(&self) -> usize {
@@ -199,11 +199,7 @@ pub fn energized_tiles(input: impl Read, find_max: bool) -> Result<usize, Box<dy
     let mut layout = Layout::new();
 
     for line in io::BufReader::new(input).lines() {
-        let l = line?;
-
-        let mut row = l.chars().map(|c| c.into()).collect();
-
-        layout.add_row(&mut row);
+        layout.add_row(line?.chars().map(|c| c.into()).collect());
     }
 
     if find_max {

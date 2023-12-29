@@ -101,8 +101,8 @@ impl Map {
         self.directions.is_empty()
     }
 
-    fn add_directions(&mut self, directions: &mut Vec<Direction>) {
-        self.directions.append(directions);
+    fn add_directions(&mut self, mut directions: Vec<Direction>) {
+        self.directions.append(&mut directions);
     }
 
     fn add_node(&mut self, node: Node) {
@@ -159,8 +159,7 @@ pub fn total_steps(input: impl Read, multiple: bool) -> Result<u64, Box<dyn Erro
         }
 
         if map.is_empty() {
-            let mut directions = l.chars().map(|c| c.into()).collect();
-            map.add_directions(&mut directions);
+            map.add_directions(l.chars().map(|c| c.into()).collect());
         } else {
             map.add_node(l.parse()?);
         }
